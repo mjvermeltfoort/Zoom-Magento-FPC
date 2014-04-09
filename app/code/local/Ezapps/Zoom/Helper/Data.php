@@ -9,7 +9,7 @@
  * @license:   EPL 1.0
  */
 
-class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract 
+class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 {
 
 	private $_holes 		= array();
@@ -23,7 +23,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	private $_rewrite_template	= '';
 	private $_rewrite_theme		= '';
 	private $_render_time		= 0;
-	private $_file_name		= 0;		
+	private $_file_name		= 0;
 	private $_zoom_handler_data	= array();
 	private $_zoom_handler_backup	= null;
 	private $_helper_toolbar	= null;
@@ -60,14 +60,14 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 
                 $no_reorder = false;
-	
-		if ($this->matchedPage() && $this->_tool_bar_finder && $routePath == '*/*/*' && ((is_object(Mage::getSingleton('core/layout')->getBlock("product_list_toolbar")) 
+
+		if ($this->matchedPage() && $this->_tool_bar_finder && $routePath == '*/*/*' && ((is_object(Mage::getSingleton('core/layout')->getBlock("product_list_toolbar"))
 		    || Mage::registry('current_category')) && !Mage::registry('current_product'))) {
 
-	               	$state = $this->getToolbarState();					
+	               	$state = $this->getToolbarState();
 
 	                if ($state && ($this->getConfigData('normalize_urls') || $this->getConfigData('friendly_urls'))) {
-				
+
 
                 	        $merge_controls  = false;
                 	        $default_state   = true;
@@ -79,7 +79,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
        	                        if (array_key_exists($page_name, $routeParams['_query']) && is_null($routeParams['_query'][$page_name]))
        	                                 $routeParams['_query'][$page_name] = 1;
 
-				$params = array_merge($state['page'], $state['control']);				
+				$params = array_merge($state['page'], $state['control']);
 
 				foreach ($state['filters'] as $key => $value) {
 					if (array_key_exists($key, $routeParams['_query'])) {
@@ -87,11 +87,11 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 						$params[$key] = $routeParams['_query'][$key];
 						$merge_controls  = true;
 					} else if (!empty($value)) {
-						$params[$key] = $value; 
+						$params[$key] = $value;
 					}
 				}
 
-				$routeParams['_query'] = array_merge($params, $routeParams['_query']);					
+				$routeParams['_query'] = array_merge($params, $routeParams['_query']);
 
 
 				foreach ($state['default'] as $key => $value)
@@ -105,7 +105,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
                                         	if ($value != $state['control'][$key]) {
                                         	        $default_state = false;
                                         	        break;
-                                        	} 
+                                        	}
 
 				if ($default_state == true && !$merge_controls) {
 					if (array_key_exists($page_name, $routeParams['_query'])
@@ -119,7 +119,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
                                                 foreach ($state['filters'] as $key => $value)
                                                     $routeParams['_query'][$key] = null;
-				} 
+				}
 
 				$no_reorder = true;
 				$routeParams['_current'] = false;
@@ -128,7 +128,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 					unset($routeParams['_query']);
 
 				if ($this->getConfigData('friendly_urls')) {
-				
+
 					$query = "";
 					foreach ($routeParams['_query'] as $key => $value) {
 						if (!is_null($value)) {
@@ -139,7 +139,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 						}
 						$routeParams['_query'][$key] = null;
 					}
-				
+
 					$uri = $this->getVarFromEzoomHandler('base_uri'). (strlen($query) > 0 ? $this->getVarFromEzoomHandler('GET_URI_MARK') . $query : '');
 					if (substr($uri, 0, 1)=='/')
 						$uri = substr($uri, 1);
@@ -158,7 +158,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	public function getHelperToolbar() {
-		
+
 		if (is_null($this->_helper_toolbar))
 			$this->_helper_toolbar = Mage::getSingleton('core/layout')->getBlock("product_list_toolbar");
 
@@ -178,7 +178,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			$mode  = explode("-", Mage::getStoreConfig('catalog/frontend/list_mode'));
 			$limit = Mage::getStoreConfig("catalog/frontend/{$mode[0]}_per_page");
 
-		
+
 			$control = array(
                	         	$toolbar->getDirectionVarName() => $toolbar->getCurrentDirection(),
                		        $toolbar->getLimitVarName()     => $toolbar->getLimit(),
@@ -216,7 +216,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 	                foreach ($attributes as $attribute)
         	                $filters[$attribute->getattributeCode()] = null;
-			
+
 			foreach ($filters as $key => $value) {
 				if (array_key_exists($key, $active_filters))
 					if (is_array($active_filters[$key]))
@@ -227,12 +227,12 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 			ksort($control);
 			ksort($default);
-			ksort($page); 
+			ksort($page);
 			ksort($filters);
 
 			$this->_helper_toolbar_state = array('control' =>  $control, 'page' => $page, 'default'=> $default, 'filters' => $filters);
-		} 
-		
+		}
+
 		return $this->_helper_toolbar_state;
 	}
 
@@ -258,7 +258,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 		if (is_null($toolbar))
 			return;
 
-		$toolbar_helper = $this->getHelperToolbar();		
+		$toolbar_helper = $this->getHelperToolbar();
 
 		$toolbar['default'][$toolbar_helper->getOrderVarName()] = $toolbar_helper->getDefaultOrder();
 
@@ -276,7 +276,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
                         $urlssl = parse_url(Mage::getStoreConfig("web/secure/base_url",   $store_id));
 
 			$file = DS . $this->getVarFromEzoomHandler('STORE') . DS . $this->getVarFromEzoomHandler('ZOOM_CLIENT_MATCH_DATA');
-	 
+
 			Mage::helper('ezzoom')->saveFile($file, json_encode($data), true);
 
 			if (function_exists('apc_add')) {
@@ -289,16 +289,16 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
                 }
 	}
-	
+
 	public function setRewrites($field, $value) {
-	
+
 		$this->_save_rewrites[$field] = $value;
 
 	}
 
 	public function getRewrites() {
 
-		return $this->_save_rewrites;		
+		return $this->_save_rewrites;
 
 	}
 
@@ -311,8 +311,8 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 		return $this->_config[$path];
         }
-	
-	public function clearCache($id) 
+
+	public function clearCache($id)
 	{
 
 		$page = Mage::getModel('ezzoom/page')->load($id);
@@ -321,7 +321,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			->addFieldToFilter('uri', array('eq' => $page->getUri()));
 
 		$collection->delete();
-	
+
 	}
 
 	public function flushCache($time = 0) {
@@ -336,11 +336,11 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			$collection = Mage::getModel('ezzoom/page')->getCollection()
 					->addFieldToFilter('expires', array('to' => $to, 'from' => $from));
 		}
-	
+
                 $collection->delete();
 
 	}
-	
+
 	public function fetchHoleRecord($main_key, $main_template) {
 
 		if (array_key_exists($main_key, $this->_holes)) {
@@ -348,14 +348,14 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			foreach ($this->_holes[$main_key] as $key => $template) {
 				if ($main_template==$template) {
 					$repeat_hole = true;
-				}	
+				}
 			}
 
 			if (!$repeat_hole) {
 				$key = $main_key . (count($this->_holes[$key]) + 1);
 				$this->_holes[$main_key][$key] = $main_template;
 			}
-			
+
 			return $key;
 
 		} else {
@@ -366,48 +366,48 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 	}
 
-	public function renderHoleStart($key, $template) 
+	public function renderHoleStart($key, $template)
 	{
-	
+
 		$key = $this->fetchHoleRecord($key, $template);
 
  		if ($this->getDebugProfile())
-			$prefix = "<div style=\"border:solid 1px #444444\"><div style=\"border:solid 2px #6F8992\">" . 
+			$prefix = "<div style=\"border:solid 1px #444444\"><div style=\"border:solid 2px #6F8992\">" .
 		    		  "<div style=\"background-color:#6F8992;color:white;font-weight:bold\">ezzoom-{$key}</div>";
 		else $prefix = "";
 
-		return "{$prefix}<span id=\"" . $this->genClass($key)  . "\">" . $this->getHoleStartTag($key);	
-		
+		return "{$prefix}<span id=\"" . $this->genClass($key)  . "\">" . $this->getHoleStartTag($key);
+
 	}
 
-	public function renderHoleEnd($key, $template) 
+	public function renderHoleEnd($key, $template)
 	{
 
 		$key = $this->fetchHoleRecord($key, $template);
 
- 		if ($this->getDebugProfile()) 
+ 		if ($this->getDebugProfile())
 			$postfix = "</div></div>";
 		else $postfix = "";
-	
-		return $this->getHoleEndTag($key) . "</span>{$postfix}";	
-		
+
+		return $this->getHoleEndTag($key) . "</span>{$postfix}";
+
 	}
 
-	private function genClass($key) 
+	private function genClass($key)
 	{
 
 		return "ezzoom-{$key}";
 
 	}
 
-        private function getHoleStartTag($key) 
+        private function getHoleStartTag($key)
 	{
 
                 return $this->getVarFromEzoomHandler('HOLE_START') . $this->genClass($key) . $this->getVarFromEzoomHandler('HOLE_END_PRE');
 
         }
 
-        private function getHoleEndTag($key) 
+        private function getHoleEndTag($key)
 	{
 
 		return $this->getVarFromEzoomHandler('HOLE_START') . $this->genClass($key) . $this->getVarFromEzoomHandler('HOLE_END_POST');
@@ -416,7 +416,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 	public function renderHeaderDebug($buffer) {
 
-		if (Mage::app()->getLayout()->getBlock('root')) {	
+		if (Mage::app()->getLayout()->getBlock('root')) {
 			if (Mage::app()->getLayout()->getBlock('root')->getTemplate() != "") {
 
 				if ($this->matchedPage() == 1)
@@ -428,7 +428,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 	}
 
-	public function punchHoles ($buffer) 
+	public function punchHoles ($buffer)
 	{
 
                 $fill = $this->getVarFromEzoomHandler('DEFAULT_FILL');
@@ -443,7 +443,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 		foreach ($this->getHoles() as $key) {
 
 			$start = $this->getHoleStartTag($key);
-			$end   = $this->getHoleEndTag($key);		
+			$end   = $this->getHoleEndTag($key);
 
                        if (array_key_exists($key, $fill)) {
                                $default = str_replace($search, $replace, $fill[$key]);
@@ -458,7 +458,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	public function setRenderTime($time) {
-		
+
 		$this->_render_time = $time;
 
 	}
@@ -472,34 +472,34 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 		} else return false;
 	}
 
-	public function getDebugAjax() 
+	public function getDebugAjax()
 	{
 
 		return $this->getConfigData('ajax_debug', 'debug');
 	}
 
-	public function getDebugProfile() 
+	public function getDebugProfile()
 	{
 
 		return $this->getConfigData('hole_punch_profile', 'debug');
 	}
 
-	public function getHolesData() 
+	public function getHolesData()
 	{
 
 		return $this->_holes;
 
 	}
-	
+
 	public function compress($ajax_state) {
 		return base64_encode(addslashes(gzcompress($ajax_state, 6)));
 	}
 
 	public function decompress($ajax_state) {
-		return gzuncompress(stripslashes(base64_decode($ajax_state)));		
+		return gzuncompress(stripslashes(base64_decode($ajax_state)));
 	}
 
-	public function getHoles() 
+	public function getHoles()
 	{
 		$holes = array();
 
@@ -514,7 +514,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	public function setMatchedPage($value) {
-		
+
 		if ($this->isEnabled() == true)
 			$this->_matched_page = $value;
 
@@ -531,30 +531,27 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	public function matchedPage() {
 
 		if (!class_exists('Ezapps_Zoom_Handler')) {
-		
 			$this->_matched_page = false;
-                                return false;
-
+            return false;
 		}
-		
+
 		if (is_null($this->_matched_page)) {
 
 			if ($this->isEnabled() != true) {
-                                $this->_matched_page = false;
-                                return false;
-                        }
+				$this->_matched_page = false;
+				return false;
+			}
 
 			if (Mage::app()->getFrontController()->getRequest()->isAjax()) {
 				$this->_matched_page = false;
-                                return false;
+                return false;
 			}
 
 			$this->_ttl = $this->getConfigData('cache_ttl', 'cache_control');
 
 			$module = Mage::app()->getFrontController()->getRequest()->getModuleName();
-                        $controller = Mage::app()->getFrontController()->getRequest()->getControllerName();
+            $controller = Mage::app()->getFrontController()->getRequest()->getControllerName();
 			$action = Mage::app()->getFrontController()->getRequest()->getActionName();
-
 
 			if ($module == 'catalog' && $controller == 'category') {
 				if ($this->getConfigData('zoom_category', 'cache_control')) {
@@ -571,7 +568,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 					$this->_matched_page = true;
 					$this->_ttl = $this->getConfigData('cache_review_ttl', 'cache_control');
 				} else $this->_matched_page = false;
-			} else if ($module == 'cms' && $controller == 'index' && ($action == 'noRoute' || $action == 'defaultNoRoute'))	{			
+			} else if ($module == 'cms' && $controller == 'index' && ($action == 'noRoute' || $action == 'defaultNoRoute'))	{
 				$this->_matched_page = false;
 				return false;
 			} else if ($module == 'cms' && ($controller == 'page' || $controller == 'index')) {
@@ -591,7 +588,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 				if ($this->regexMatchSimple($this->getConfigData('zoom_include_uri', 'cache_control'), $this->getVarFromEzoomHandler('REQUEST')))
 					$this->_matched_page = true;
 			}
-		
+
 			if ($this->_matched_page == true) {
 				if ($this->regexMatchSimple($this->getConfigData('zoom_exclude_modules', 'cache_control'), "{$module}_{$controller}_{$action}"))
 					$this->_matched_page = false;
@@ -603,7 +600,6 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 
 			if ($this->_matched_page == true) {
-
 				Mage::getSingleton('customer/session')->setLastEzzoomUrl(Mage::helper('core/url')->getCurrentUrl());
 
 				$package_check  = Mage::getStoreConfig("design/package/ua_regexp");
@@ -617,12 +613,11 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 			// Invalidate if error/success messages
 			if ($this->_matched_page == true) {
-				if (Mage::getSingleton('core/session')->getMessages())
+				if (Mage::getSingleton('core/session')->getMessages()->getItems()) {
 					$this->_matched_page = false;
+				}
 			}
-
-
-		} 
+		}
 
 		return $this->_matched_page;
 
@@ -643,8 +638,8 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 	}
 
-	public function punchStatus($key) 
-	{	
+	public function punchStatus($key)
+	{
 
 		if ($this->isEnabled()) {
 			if ($this->matchedPage() || ($key == 'currency'))
@@ -654,7 +649,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	public function regexMatchUserAgent($regex) {
-		
+
 		if (!$regex)
 			return '';
 
@@ -676,7 +671,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 	}
 
 	public function regexMatchSimple($regex, $matchTerm) {
-		
+
 		if (!$regex)
 			return false;
 
@@ -715,41 +710,41 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
  		$base = $root . DS . $this->getVarFromEzoomHandler('STORE');
 
 		if ($this->_rewrite_package != '' || $this->_rewrite_template != '' || $this->_rewrite_theme != '') {
-			
+
 			if ($this->_rewrite_package != '')
 				$base .= DS . $this->_rewrite_package;
 			else
-				$base .= DS . 'default';	
+				$base .= DS . 'default';
 
 			if ($this->_rewrite_template != '')
 				$base .= DS . $this->_rewrite_template;
 			else
-				$base .= DS . 'default';	
+				$base .= DS . 'default';
 
 			if ($this->_rewrite_theme != '')
 				$base .= DS . $this->_rewrite_theme;
 			else
-				$base .= DS . 'default';	
+				$base .= DS . 'default';
 
-		}	
-		
+		}
+
 		$file_name = $base . $file_name;
-	
+
 		$symlink = null;
-	
+
 		if ($this->_tool_bar_finder && ((is_object(Mage::getSingleton('core/layout')->getBlock("product_list_toolbar"))
                     || Mage::registry('current_category')) && !Mage::registry('current_product'))) {
-	
+
                         $attributes = array();
 			$base_page  = true;
 			$params = array();
 
 			$state = $this->getToolbarState();
-			
+
 			$request = Mage::app()->getFrontController()->getRequest();
 
 
-			$params = array_merge($state['page'], $state['control']);			
+			$params = array_merge($state['page'], $state['control']);
 
 			foreach ($state['control'] as $key => $value)
 				if ($value != $state['default'][$key]) {
@@ -758,23 +753,23 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 				}
 
 			foreach ($state['filters'] as $key => $value)
-				if ($request->getParam($key) != '') 
-					$attributes[$key] = urlencode($request->getParam($key));	
-		
+				if ($request->getParam($key) != '')
+					$attributes[$key] = urlencode($request->getParam($key));
+
 			if (count($attributes) > 0) {
 				$base_page  = false;
 				$params = array_merge($params, $attributes);
 			}
 
-			
+
 
 			if ($base_page == true)
 				$symlink = $this->createPathToFile($file_name . DS . $this->getVarFromEzoomHandler('GET_POSTFIX'), $state['page']);
 			else $params = array_merge($state['page'], $params);
 
-			$file_name = $this->createPathToFile($file_name . DS . $this->getVarFromEzoomHandler('GET_POSTFIX'), $params); 
+			$file_name = $this->createPathToFile($file_name . DS . $this->getVarFromEzoomHandler('GET_POSTFIX'), $params);
 
-		} else { 
+		} else {
 			$file_name = $this->createPathToFile($file_name, array(), false);
 		}
 		$this->_file_name = $file_name;
@@ -819,13 +814,13 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			}
 
 		} else {
-			
+
 			file_put_contents($file_name, $data);
 			if ($symlink)
 				if (!file_exists($symlink))
                                         symlink($file_name, $symlink);
 
-			
+
 		}
 
 		return $page_id;
@@ -838,7 +833,7 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 		if (file_exists($filename . ".gz"))
 			unlink($filename . ".gz");
-		
+
 
 	}
 
@@ -851,8 +846,8 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 			if ($add_index == true)
 	                       $file_name .= DS . $this->getVarFromEzoomHandler('ZOOM_INDEX');
 
-			$file_name = str_replace(DS . DS, DS, $file_name); 
-	
+			$file_name = str_replace(DS . DS, DS, $file_name);
+
 	        	$path = explode(DS, $file_name);
 
 	                $real_file_name = array_pop($path);
@@ -873,5 +868,5 @@ class Ezapps_Zoom_Helper_Data extends Mage_Core_Helper_Abstract
 
 	                return str_replace(DS . DS, DS, $path_finished . DS . $real_file_name);
 
-	}		
+	}
 }
