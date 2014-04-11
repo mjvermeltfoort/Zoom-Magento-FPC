@@ -308,34 +308,30 @@ class Ezapps_Zoom_Handler
 
 	private static function checkClient($regex) {
 
-		if (!$regex)
-                	return '';
+		if (!$regex) {
+			return '';
+		}
 
-                $rules = @unserialize($regex);
+		$rules = @unserialize($regex);
 
-                if (empty($rules))
-                	return '';
+		if (empty($rules)) {
+			return '';
+		}
 
-                foreach ($rules as $rule) {
-                    $regexp = '#' . trim($rule['regexp'], '#') . '#';
-                    if (@preg_match($regexp, self::$AGENT))
-                        return $rule['value'];
-
-                }
-
+		foreach ($rules as $rule) {
+			$regexp = '#' . trim($rule['regexp'], '#') . '#';
+			if (@preg_match($regexp, self::$AGENT)) {
+				return $rule['value'];
+			}
+		}
 	}
-
 }
 
 $zoom_controller = Ezapps_Zoom_Handler::getInstance();
 
-if (!(array_key_exists('___store', $_GET) && array_key_exists('___from_store', $_GET))) {
+if ($_SERVER['REQUEST_URI'] != '/' && !(array_key_exists('___store', $_GET) && array_key_exists('___from_store', $_GET))) {
 	if (!(array_key_exists('isAjax', $_GET) || array_key_exists('ajax', $_GET) || array_key_exists('isAjax', $_POST) || array_key_exists('ajax', $_POST))) {
-
 		$zoom_controller->tryRetrieveCacheFile();
-
 		$zoom_controller->startBuffer();
 	}
 }
-
-?>
